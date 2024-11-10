@@ -1,7 +1,8 @@
 {% extends 'base.html' %}       
-
+{% load static %}
 {% block body %}
 
 <h2>Carrinho</h2>
 
+<a href="{% url 'checkout' %}">Checkout</a>
 {% endblock %}  
