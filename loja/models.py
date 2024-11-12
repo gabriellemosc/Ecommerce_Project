@@ -14,19 +14,30 @@ class Cliente(models.Model):
 #category (male, female, childish)
 class Categoria(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)
+
+    #show the name of the product, without 'object' appearing after the word
+    def __str__(self):
+        return str(self.nome)
     
 #type (shirt, t-shirt, shorts, pants etc)
 class Tipo(models.Model):           
     nome = models.CharField(max_length=200, null=True, blank=True)
 
+    # show the name of the product, without 'object' appearing after the word
+    def __str__(self):
+        return str(self.nome)
+
 #product
 class Produto(models.Model):
-    imagem =  models.CharField(max_length=400, null=True, blank=True)
+    imagem =  models.ImageField(null=True, blank=True)
     nome =   models.CharField(max_length=200, null=True, blank=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)            
     ativo = models.BooleanField(default=True)                           #by default when we create a product it will be active
     categoria = models.ForeignKey(Categoria, null=True, blank=True, on_delete=models.SET_NULL)
     tipo = models.ForeignKey(Tipo, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"Nome: {self.nome}, Categoria: {self.categoria}, Tipo: {self.tipo}, Preço: {self.preco}"
 
 #stock
 class ItemEstoque(models.Model):
