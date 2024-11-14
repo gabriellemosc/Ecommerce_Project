@@ -4,4 +4,13 @@
 
 <h2>Loja</h2>
 
-{% endblock %}
+{% for produto in produtos %}
+
+<p>Produto: {{produto.nome}} </p>
+<p> Preço: {{produto.preco}} </p>
+
+{% endfor %}
+{% endblock %}  
+
+
+        

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from .models import *                       #import all the tables 
 # Create your views here.
 
 
@@ -7,8 +7,10 @@ def homepage(request):
     return render(request, 'homepage.html')     #load the HTML file
 
 # store
-def loja(request):              
-    return render(request, 'loja.html')     #load the HTML file
+def loja(request):  
+    produtos = Produto.objects.all()            #queryset
+    context = {'produtos': produtos}        
+    return render(request, 'loja.html', context)     #load the HTML file
 
 
 def carrinho(request):              

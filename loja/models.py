@@ -27,7 +27,7 @@ class Tipo(models.Model):
     def __str__(self):
         return str(self.nome)
 
-#product
+#table product
 class Produto(models.Model):
     imagem =  models.ImageField(null=True, blank=True)
     nome =   models.CharField(max_length=200, null=True, blank=True)
