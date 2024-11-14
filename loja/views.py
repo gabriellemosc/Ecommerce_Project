@@ -3,8 +3,10 @@ from .models import *                       #import all the tables
 # Create your views here.
 
 
-def homepage(request):              
-    return render(request, 'homepage.html')     #load the HTML file
+def homepage(request):      
+    banners = Banner.objects.all()   
+    context = {"banners": banners}    
+    return render(request, 'homepage.html', context)     #load the HTML file
 
 # store
 def loja(request):  
