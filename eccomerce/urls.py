@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static  #allow to include include the links of images
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('loja.urls'))             #to include all the urls from our app 'Loja"
 ]
+
+#allows you to include static image links within your website
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)                       #we import the var of the file settings
