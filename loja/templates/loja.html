@@ -5,11 +5,12 @@
 <h2>Loja</h2>
 
 {% for produto in produtos %}
-
-<img src={{produto.imagem.url}} width="300" height="450">
-<p>Produto: {{produto.nome}} </p>
-<p> Preço: {{produto.preco}} </p>
-
+<!-- the path to our store plus the product ID -->
+<a href="{% url 'ver_produto' produto.id %}">
+    <img src={{produto.imagem.url}} width="300" height="450">
+    <p>Produto: {{produto.nome}} </p>
+    <p> Preço: {{produto.preco}} </p>
+</a>
 {% endfor %}
 {% endblock %}  
 

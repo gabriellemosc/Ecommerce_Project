@@ -38,13 +38,24 @@ class Produto(models.Model):
 
     def __str__(self):
         return f"Nome: {self.nome}, Categoria: {self.categoria}, Tipo: {self.tipo}, Preço: {self.preco}"
+    
+#color of the product
+class Cor(models.Model):
+    nome = models.CharField(max_length=200, null=True, blank=True)
+    codigo = models.CharField(max_length=200, null=True, blank=True)    
+
+    def __str__(self):
+        return str(self.nome)
 
 #stock
 class ItemEstoque(models.Model):
     produto = models.ForeignKey(Produto, null=True, blank=True, on_delete=models.SET_NULL)
-    cor = models.CharField(max_length=200, null=True, blank=True)
+    cor = models.ForeignKey(Cor, max_length=200, null=True, blank=True, on_delete=models.SET_NULL)
     tamanho = models.CharField(max_length=200, null=True, blank=True)
     quantidade = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.produto.nome}, Tamanho: {self.tamanho}, Cor: {self.cor.nome}"
 
 #Adress
 
@@ -72,6 +83,9 @@ class ItensPedido(models.Model):
     item_estoque = models.ForeignKey(ItemEstoque, null=True, blank=True, on_delete=models.SET)
     quantidade = models.IntegerField(default=0)
     pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return str(self.item_estoque)
 
 # the banners that we use in our homepage
 

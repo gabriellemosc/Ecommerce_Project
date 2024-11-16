@@ -3,9 +3,11 @@ from .views import *     #import all the functions, to run our URL Link from the
 
 urlpatterns = [
     path('',homepage, name='homepage'),                      #homepage
-    path('loja/',loja, name='loja'),                              #store
+    path('loja/',loja, name='loja'),                            #store
+    path('loja/<str:nome_categoria>/',loja, name='loja'),       #store  but filtering according to product category            
+    path('produto/<int:id_produto>/', ver_produto, name='ver_produto'), #dynamically, for each product, "create" a details page, all pages are the same, but we have to get the product id to show                                   
     path('minhaconta/', minha_conta, name='minhaconta'),                    #my account
-    path('login',login, name='login' ),                         #login
+    path('login',login, name='login'),                         #login
     path('carrinho', carrinho, name='carrinho'),
     path('checkout',checkout, name='checkout' ),             #checkout
 ]
