@@ -4,13 +4,29 @@
 
 <h2>{{ produto.nome }}</h2>
 
+{% if itens_estoque %}
+
 {{itens_estoque}}
 
 <img src={{produto.imagem.url}} width="300" height="450">
 <p>Produto: {{produto.nome}} </p>
 <p> Preço: {{produto.preco}} </p>
 
+<!-- show the colors -->
+{% for cor in cores %}
+
+{{cor.nome}}
+<i class="fa-solid fa-circle" style="color: {{cor.codigo}};"></i>
+
+{% endfor %}
+
 <button>Adicionar ao Carrinho</button>
+
+{% else %}
+
+<p>Produto Fora de Estoque</p>
+
+{% endif %}
 
 {% endblock %}  
 

@@ -20,7 +20,14 @@ def loja(request, nome_categoria=None):     #is None because we wait for the use
 def ver_produto(request, id_produto):       #the id product to show the unique HTML file for each product
     produto = Produto.objects.get(id=id_produto)
     itens_estoque = ItemEstoque.objects.filter(produto=produto,quantidade__gt=0)    #search for the product in our DB, that are greater than '0'
-    context = {"produto": produto, 'itens_estoque': itens_estoque}
+    # we're using this 'if' to use in the html file
+    if len(itens_estoque) > 0:
+        tem_estoque = True
+        cores = {item.cor for item in itens_estoque}    #When we put it between sets we guarantee that we do not have duplicate color values
+    else:
+        tem_estoque = False
+        cores = {}
+    context = {"produto": produto, 'itens_estoque': itens_estoque, "tem_estoque": tem_estoque, "cores": cores}
     return render(request, 'ver_produto.html', context)
 
 
