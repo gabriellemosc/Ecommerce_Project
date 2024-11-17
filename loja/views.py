@@ -17,18 +17,50 @@ def loja(request, nome_categoria=None):     #is None because we wait for the use
     return render(request, 'loja.html', context)     #load the HTML file
 
 # see the details of the product
-def ver_produto(request, id_produto):       #the id product to show the unique HTML file for each product
+def ver_produto(request, id_produto, id_cor=None):
+    tem_estoque = False
+    cores = set()
+    tamanhos = []
+    nome_cor_selecionada = None
+    if id_cor:
+        cor = Cor.objects.get(id=id_cor)
+        nome_cor_selecionada = cor.nome
+    # serach the product by the id
     produto = Produto.objects.get(id=id_produto)
-    itens_estoque = ItemEstoque.objects.filter(produto=produto,quantidade__gt=0)    #search for the product in our DB, that are greater than '0'
-    # we're using this 'if' to use in the html file
-    if len(itens_estoque) > 0:
+
+    # search itens with more than 
+    itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0)
+
+    # if there is item, then define the color
+    if itens_estoque.exists():
         tem_estoque = True
-        cores = {item.cor for item in itens_estoque}    #When we put it between sets we guarantee that we do not have duplicate color values
-    else:
-        tem_estoque = False
-        cores = {}
-    context = {"produto": produto, 'itens_estoque': itens_estoque, "tem_estoque": tem_estoque, "cores": cores}
+        cores = {item.cor for item in itens_estoque}  # assure unique values
+
+        #  filter by color, if a color id was send
+        if id_cor:
+            itens_estoque = itens_estoque.filter(cor__id=id_cor)
+        
+        # Extract unique sizes for remaining items
+        tamanhos = list(itens_estoque.values_list('tamanho', flat=True))
+    
+    # Prints para depuração
+    print(f"Itens no estoque: {itens_estoque}")
+    print(f"Produto disponível: {produto.nome}")
+    print(f"Tamanhos disponíveis: {tamanhos}")
+
+    # Cria o contexto para o template
+    context = {
+        "produto": produto,
+        "itens_estoque": itens_estoque,
+        "tem_estoque": tem_estoque,
+        "cores": cores,
+        "tamanhos": tamanhos,
+        "nome_cor_selecionada": nome_cor_selecionada
+    }
+
     return render(request, 'ver_produto.html', context)
+
+
 
 
 def carrinho(request):              

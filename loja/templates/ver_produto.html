@@ -4,21 +4,39 @@
 
 <h2>{{ produto.nome }}</h2>
 
-{% if itens_estoque %}
+{% if tem_estoque %}
 
-{{itens_estoque}}
+
 
 <img src={{produto.imagem.url}} width="300" height="450">
 <p>Produto: {{produto.nome}} </p>
 <p> Preço: {{produto.preco}} </p>
 
+{% if nome_cor_selecionada %}
+
+Cor: {{nome_cor_selecionada}}
+
+{% endif %}
+
 <!-- show the colors -->
 {% for cor in cores %}
 
-{{cor.nome}}
-<i class="fa-solid fa-circle" style="color: {{cor.codigo}};"></i>
+<a href="{% url 'ver_produto' produto.id cor.id  %}">
+    <i class="fa-solid fa-circle" style="color: {{cor.codigo}}"></i>
+</a>
+{% endfor %}
+
+
+
+<p>Selecione o Tamanho</p>
+
+{% for tamanho in tamanhos %}
+
+<button> {{ tamanho }} </button>    
 
 {% endfor %}
+
+
 
 <button>Adicionar ao Carrinho</button>
 
@@ -27,6 +45,8 @@
 <p>Produto Fora de Estoque</p>
 
 {% endif %}
+
+
 
 {% endblock %}  
 
