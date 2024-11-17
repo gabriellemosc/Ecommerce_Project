@@ -7,14 +7,14 @@
 {% if tem_estoque %}
 
 
-
 <img src={{produto.imagem.url}} width="300" height="450">
 <p>Produto: {{produto.nome}} </p>
 <p> Preço: {{produto.preco}} </p>
+{% endif %}
 
-{% if nome_cor_selecionada %}
+{% if cor_selecionada %}
 
-Cor: {{nome_cor_selecionada}}
+Cor: {{cor_selecionada.nome}}
 
 {% endif %}
 
@@ -26,27 +26,26 @@ Cor: {{nome_cor_selecionada}}
 </a>
 {% endfor %}
 
+{% if tamanhos %}
+<form method="POST" action="{% url 'adicionar_carrinho' produto.id %}">
+    {% csrf_token %}
+    <p>Selecione o Tamanho: </p>
 
+    {% for tamanho in tamanhos %}
+    <input type="radio" name="tamanho" value="{{tamanho}}">
+    <label for="{{tamanho}}">{{tamanho}}</label>
+    {% endfor %}
 
-<p>Selecione o Tamanho</p>
+    <input type="hidden" name="cor" value="{{cor_selecionada.id}}">
 
-{% for tamanho in tamanhos %}
-
-<button> {{ tamanho }} </button>    
-
-{% endfor %}
-
-
-
-<button>Adicionar ao Carrinho</button>
+    <button type="submit">Adicionar ao Carrinho</button>
+</form>
 
 {% else %}
 
 <p>Produto Fora de Estoque</p>
 
 {% endif %}
-
-
 
 {% endblock %}  
 

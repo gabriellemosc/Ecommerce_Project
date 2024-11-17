@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *                       #import all the tables 
 # Create your views here.
 
@@ -21,10 +21,9 @@ def ver_produto(request, id_produto, id_cor=None):
     tem_estoque = False
     cores = set()
     tamanhos = []
-    nome_cor_selecionada = None
+    cor_selecionada = None
     if id_cor:
-        cor = Cor.objects.get(id=id_cor)
-        nome_cor_selecionada = cor.nome
+        cor_selecionada = Cor.objects.get(id=id_cor)
     # serach the product by the id
     produto = Produto.objects.get(id=id_produto)
 
@@ -55,11 +54,25 @@ def ver_produto(request, id_produto, id_cor=None):
         "tem_estoque": tem_estoque,
         "cores": cores,
         "tamanhos": tamanhos,
-        "nome_cor_selecionada": nome_cor_selecionada
+        "cor_selecionada": cor_selecionada
     }
 
     return render(request, 'ver_produto.html', context)
 
+# add product to buy
+def adicionar_carrinho(request, id_produto):
+    if request.method == "POST" and id_produto:
+        dados = request.POST.dict()                 #get info of the request
+        print(dados)
+        tamanho = dados.get('tamanho')
+        id_cor = dados.get('cor')
+        return redirect('carrinho')
+        if not tamanho:
+            return redirect('carrinho')
+        #get the client
+        #create the order or pick up the order that is open
+    else:
+        return redirect('loja')
 
 
 
