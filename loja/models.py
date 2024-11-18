@@ -11,6 +11,8 @@ class Cliente(models.Model):
     id_sessao = models.CharField(max_length=200, null=True, blank=True)
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)                                    #each user can only have one customer
 
+    def __str__(self):
+        return str(self.nome)
 #category (male, female, childish)
 class Categoria(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)
@@ -77,6 +79,9 @@ class Pedido(models.Model):
     endereco = models.ForeignKey(Endereco, null=True, blank=True, on_delete=models.SET_NULL)
     data_finalizacao = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"Cliente: {self.cliente.email}, ID-Pedido: {self.id}, Finalizado: {self.finalizado}"
+
 
 #items ordered
 class ItensPedido(models.Model):
@@ -85,7 +90,7 @@ class ItensPedido(models.Model):
     pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return str(self.item_estoque)
+        return f"ID Pedido: {self.pedido.id}, Produto: {self.item_estoque.produto.nome}, {self.item_estoque.tamanho, {self.item_estoque.cor.nome}}"
 
 # the banners that we use in our homepage
 
@@ -96,3 +101,5 @@ class Banner(models.Model):
 
     def __str__(self):
         return f"{self.link_destino} - Ativo: {self.ativo}"     #to verify if is active
+    
+#Whenever a user creates an account on our website, we will create an account for them
