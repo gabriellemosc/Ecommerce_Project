@@ -58,6 +58,8 @@ class ItemEstoque(models.Model):
 
     def __str__(self):
         return f"{self.produto.nome}, Tamanho: {self.tamanho}, Cor: {self.cor.nome}"
+    
+   
 
 #Adress
 
@@ -81,6 +83,18 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"Cliente: {self.cliente.email}, ID-Pedido: {self.id}, Finalizado: {self.finalizado}"
+    @property
+    # total quantity of items 
+    def quantidade_total(self):
+        itens_pedido = ItensPedido.objects.filter(pedido__id=self.id)
+        quantidade = sum([item.quantidade for item in itens_pedido])
+        return quantidade
+    @property
+    #final order price
+    def preco_total(self):
+        itens_pedido = ItensPedido.objects.filter(pedido__id=self.id)
+        preco = sum([item.preco_total for item in itens_pedido])
+        return preco
 
 
 #items ordered
@@ -91,6 +105,11 @@ class ItensPedido(models.Model):
 
     def __str__(self):
         return f"ID Pedido: {self.pedido.id}, Produto: {self.item_estoque.produto.nome}, {self.item_estoque.tamanho, {self.item_estoque.cor.nome}}"
+    
+     #to get the total price of each order
+    @property
+    def preco_total(self):
+        return self.quantidade * self.item_estoque.produto.preco
 
 # the banners that we use in our homepage
 

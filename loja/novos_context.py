@@ -6,7 +6,7 @@ def carrinho(request):
     if request.user.is_authenticated:
         cliente = request.user.cliente      #get the client
     else:
-        print("Nao logado")
+        return{"quantidades_produtos_carrinho": quantidades_produtos_carrinho} 
     pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False) #If no order was created, we create an empty order for the customer, otherwise we would get an error
     #how many products are in the user's order
     itens_pedido = ItensPedido.objects.filter(pedido=pedido)

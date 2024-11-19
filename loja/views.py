@@ -76,8 +76,14 @@ def adicionar_carrinho(request, id_produto):
 
 
 
-def carrinho(request):              
-    return render(request, 'carrinho.html')     #load the HTML file
+def carrinho(request):    
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
+    pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False) #If no order was created, we create an empty order for the customer, otherwise we would get an error
+    #how many products are in the user's order
+    itens_pedido = ItensPedido.objects.filter(pedido=pedido)  
+    context = {"itens_pedido":itens_pedido, "pedido": pedido}        
+    return render(request, 'carrinho.html', context)     #load the HTML file
 
 #exit the site
 def checkout(request):              
