@@ -42,10 +42,7 @@ def ver_produto(request, id_produto, id_cor=None):
         # Extract unique sizes for remaining items
         tamanhos = list(itens_estoque.values_list('tamanho', flat=True))
     
-    # Prints para depuração
-    print(f"Itens no estoque: {itens_estoque}")
-    print(f"Produto disponível: {produto.nome}")
-    print(f"Tamanhos disponíveis: {tamanhos}")
+   
 
     # Cria o contexto para o template
     context = {
@@ -63,16 +60,32 @@ def ver_produto(request, id_produto, id_cor=None):
 def adicionar_carrinho(request, id_produto):
     if request.method == "POST" and id_produto:
         dados = request.POST.dict()                 #get info of the request
-        print(dados)
         tamanho = dados.get('tamanho')
         id_cor = dados.get('cor')
-        return redirect('carrinho')
+        print(dados)
         if not tamanho:
-            return redirect('carrinho')
+            return redirect('loja')
         #get the client
+        print(f" O id do produto é {id_produto}")
+        print(f"O id da cor é {id_cor}")
+        print(f"Tamanho é {tamanho}")
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            return redirect('loja')
+        pedido,criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+        item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
+        item_pedido, criado = ItensPedido.objects.get_or_create(item_estoque=item_estoque, pedido=pedido)
+        item_pedido.quantidade += 1
+        item_pedido.save()      # we need to save in our DB, cuz we modified the order
+        return redirect('carrinho')
         #create the order or pick up the order that is open
     else:
         return redirect('loja')
+    
+def remover_carrinho(request):
+    return redirect('carrinho')
+
 
 
 
