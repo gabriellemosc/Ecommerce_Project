@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *                       #import all the tables 
+import uuid         #random number
 # Create your views here.
 
 
@@ -65,37 +66,74 @@ def adicionar_carrinho(request, id_produto):
         print(dados)
         if not tamanho:
             return redirect('loja')
+        resposta = redirect('carrinho')
         #get the client
-        print(f" O id do produto é {id_produto}")
-        print(f"O id da cor é {id_cor}")
-        print(f"Tamanho é {tamanho}")
         if request.user.is_authenticated:
             cliente = request.user.cliente
         else:
-            return redirect('loja')
+            #we will store the customer session data
+            if request.COOKIES.get('id_sessao'):                #we check if the user already has a session id
+                id_sessao =  request.COOKIES.get('id_sessao')       #we get the session id
+            else:
+                id_sessao = str(uuid.uuid4())               #random session number that we create if the user doesn't have one
+                resposta.set_cookie(key="id_sessao", value=id_sessao)
+            cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
         pedido,criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
         item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
         item_pedido, criado = ItensPedido.objects.get_or_create(item_estoque=item_estoque, pedido=pedido)
         item_pedido.quantidade += 1
         item_pedido.save()      # we need to save in our DB, cuz we modified the order
-        return redirect('carrinho')
+        return resposta
         #create the order or pick up the order that is open
     else:
         return redirect('loja')
     
-def remover_carrinho(request):
-    return redirect('carrinho')
+def remover_carrinho(request, id_produto):
+     if request.method == "POST" and id_produto:
+        dados = request.POST.dict()                 #get info of the request
+        tamanho = dados.get('tamanho')
+        id_cor = dados.get('cor')
+        if not tamanho:
+            return redirect('loja')
+        #get the client
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            if request.COOKIES.get('id_sessao'):
+                id_sessao = request.COOKIES.get('id_sessao')
+                cliente,criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+            else:
+                return redirect('loja')
+        pedido,criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+        item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
+        item_pedido, criado = ItensPedido.objects.get_or_create(item_estoque=item_estoque, pedido=pedido)
+        item_pedido.quantidade -= 1
+        item_pedido.save()      # we need to save in our DB, cuz we modified the order
+        if item_pedido.quantidade <= 0:         
+            item_pedido.delete()
+        return redirect('carrinho')
+     
+        #create the order or pick up the order that is open
+     else:
+        return redirect('loja')
 
 
 
-
+#verify and see the 'carrinho'
 def carrinho(request):    
     if request.user.is_authenticated:
         cliente = request.user.cliente
+    else:
+        if request.COOKIES.get("id_sessao"):
+            id_sessao =  request.COOKIES.get('id_sessao')
+            cliente,criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        else:
+            context = {"cliente_existente":False,"itens_pedido":None, "pedido": None}       #we send the variables for to be sure will not show any error
+            return render(request, 'carrinho.html', context) 
     pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False) #If no order was created, we create an empty order for the customer, otherwise we would get an error
     #how many products are in the user's order
     itens_pedido = ItensPedido.objects.filter(pedido=pedido)  
-    context = {"itens_pedido":itens_pedido, "pedido": pedido}        
+    context = {"itens_pedido":itens_pedido, "pedido": pedido, "cliente_existente":True}        
     return render(request, 'carrinho.html', context)     #load the HTML file
 
 #exit the site
