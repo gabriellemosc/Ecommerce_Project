@@ -6,4 +6,34 @@
 <h2>Checkout</h2>
 
 
+
+    <h4>Número Pedido: {{pedido.id}}</h4>
+
+    <a href="{% url 'carrinho' %}">Voltar Para Carrinho</a>
+
+    <p>Preço Total do Pedido R${{pedido.preco_total}}</p>
+
+    <p>Total Produtos: R${{pedido.quantidade_total}}    </p>
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <h3>Selecione Endereço de Entrega</h3>
+    <a href="{% url 'adicionar_endereco' %}">Adicione Endereço de Entrega</a>
+    <br>
+    {% for endereco in enderecos %}
+    <input type="radio" name="endereco" value="{{endereco.id}}">
+
+    <label for="{{endereco.id}}">{{endereco.cidade}}-{{endereco.estado}}, {{endereco.rua}}, {{endereco.numero}}, {{endereco.complemento}} - {{endereco.cep}}</label>
+    <br>
+    {% endfor %}
+    
+{% if not request.user.is_authenticated %}
+    <hr>
+    <h4>Preencha Seu Emial Para Finalizar o Pedido</h4>
+    <input type="email" name="email" placeholder="email">
+    {% endif %}
+    <hr>
+    <input type="hidden" value="{{pedido.preco_total}}" name="total">
+    <button type="submit"> Finalizar Pedido - R${{pedido.preco_total}} </button>
+</form>
 {% endblock %}

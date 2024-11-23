@@ -72,6 +72,8 @@ class Endereco(models.Model):
         estado = models.CharField(max_length=200, null=True, blank=True)
         cliente = models.ForeignKey(Cliente, null=True, blank=True, on_delete=models.SET_NULL)
 
+        def __str__(self):
+            return str(f"Cliente: {self.cliente} {self.rua}, {self.numero}, {self.cidade}, {self.estado}")
 
 #order
 class Pedido(models.Model):

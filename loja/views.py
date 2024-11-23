@@ -76,7 +76,7 @@ def adicionar_carrinho(request, id_produto):
                 id_sessao =  request.COOKIES.get('id_sessao')       #we get the session id
             else:
                 id_sessao = str(uuid.uuid4())               #random session number that we create if the user doesn't have one
-                resposta.set_cookie(key="id_sessao", value=id_sessao)
+                resposta.set_cookie(key="id_sessao", value=id_sessao, max_age=60*60*24*30) #time of expire to one month
             cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
         pedido,criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
         item_estoque = ItemEstoque.objects.get(produto__id=id_produto, tamanho=tamanho, cor__id=id_cor)
@@ -138,7 +138,39 @@ def carrinho(request):
 
 #exit the site
 def checkout(request):              
-    return render(request, 'checkout.html')     #load the HTML file
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
+    else:
+        if request.COOKIES.get("id_sessao"):
+            id_sessao =  request.COOKIES.get('id_sessao')
+            cliente,criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        else:
+            return redirect('loja') 
+    pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False) #If no order was created, we create an empty order for the customer, otherwise we would get an error
+    enderecos = Endereco.objects.filter(cliente=cliente)
+    context = {"pedido": pedido, "enderecos": enderecos}        
+    return render(request, 'checkout.html', context)     #load the HTML file
+
+
+# add adress
+def adicionar_endereco(request):
+    if request.method == "POST":
+        #handle form submission
+        if request.user.is_authenticated:
+             cliente = request.user.cliente
+        else:
+            if request.COOKIES.get("id_sessao"):
+                id_sessao =  request.COOKIES.get('id_sessao')
+                cliente,criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+            else:
+                 return redirect('loja') 
+        dados = request.POST.dict()     #get the info about the requisition
+        endereco = Endereco.objects.create(cliente=cliente, rua=dados.get('rua'),numero=int(dados.get('numero')),estado=dados.get('estado'),cidade=dados.get('cidade'),cep=dados.get('cep'), complemento=dados.get('complemento'))
+        endereco.save()
+        return redirect('checkout')
+    else:
+        context = {}
+        return render(request, 'adicionar_endereco.html', context)
 
 # Page My account
 def minha_conta(request):              

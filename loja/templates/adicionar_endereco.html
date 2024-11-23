@@ -1,0 +1,23 @@
+{% extends 'base.html' %}       
+{% load static %}
+
+{% block body %}
+
+<h2>Adicionar Endereco</h2>
+
+<a href="{% url 'checkout' %}">Retornar para Compra </a>
+
+<h3>Adicione Um Novo Endereco</h3>
+<form method="POST" action="{% url 'adicionar_endereco' %}">
+    {% csrf_token %}
+
+    <input type="text" name="cidade" placeholder="Cidade">
+    <input type="text" name="estado" placeholder="Estado">
+    <input type="text" name="rua" placeholder="Rua">
+    <input type="number" name="numero" placeholder="Número">
+    <input type="text" name="complemento" placeholder="Complemento">
+    <input type="number" name="cep" placeholder="Cep">
+
+      <button type="submit"> Adicionar Endereco </button>
+</form>
+{% endblock %}
