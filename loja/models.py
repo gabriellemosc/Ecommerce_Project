@@ -16,7 +16,7 @@ class Cliente(models.Model):
 #category (male, female, childish)
 class Categoria(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)
-
+    slug = models.CharField(max_length=200, null=True, blank=True)
     #show the name of the product, without 'object' appearing after the word
     def __str__(self):
         return str(self.nome)
@@ -24,7 +24,7 @@ class Categoria(models.Model):
 #type (shirt, t-shirt, shorts, pants etc)
 class Tipo(models.Model):           
     nome = models.CharField(max_length=200, null=True, blank=True)
-
+    slug = models.CharField(max_length=200, null=True, blank=True)          #how is gonna show the link to the user
     # show the name of the product, without 'object' appearing after the word
     def __str__(self):
         return str(self.nome)

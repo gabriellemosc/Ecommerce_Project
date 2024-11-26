@@ -64,7 +64,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'loja.novos_context.carrinho',                                  # we add the context of the 'carrinho' for all the views has acess to this 
+                'loja.novos_context.carrinho',   
+                'loja.novos_context.categorias_tipos',                                                                # we add the context of the 'carrinho' for all the views has acess to this 
             ],
         },
     },

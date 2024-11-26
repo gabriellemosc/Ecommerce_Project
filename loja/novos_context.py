@@ -1,4 +1,4 @@
-from .models import Pedido, ItensPedido,Cliente
+from .models import Pedido, ItensPedido,Cliente,Categoria,Tipo
 
 #   the 'carrinho' must be accessible to all views, so we created a separate file to make this possible
 def carrinho(request):
@@ -17,3 +17,8 @@ def carrinho(request):
     for item in itens_pedido:
         quantidades_produtos_carrinho += item.quantidade
     return{"quantidades_produtos_carrinho": quantidades_produtos_carrinho} 
+
+def categorias_tipos(request):
+    categorias = Categoria.objects.all()
+    tipos = Tipo.objects.all()
+    return{"categorias":categorias, "tipos": tipos}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *                       #import all the tables 
 import uuid         #random number
+from .utils import filtrar_produtos
 # Create your views here.
 
 
@@ -10,10 +11,9 @@ def homepage(request):
     return render(request, 'homepage.html', context)     #load the HTML file
 
 # store
-def loja(request, nome_categoria=None):     #is None because we wait for the user to filter by the category 
+def loja(request, filtro=None):     #is None because we wait for the user to filter by the category 
     produtos = Produto.objects.filter(ativo=True)            #queryset
-    if nome_categoria:
-        produtos = produtos.filter(categoria__nome=nome_categoria)          
+    produtos = filtrar_produtos(produtos, filtro)       #we create a separete file to organize
     context = {'produtos': produtos}
     return render(request, 'loja.html', context)     #load the HTML file
 

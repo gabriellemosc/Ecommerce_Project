@@ -4,7 +4,7 @@ from .views import *     #import all the functions, to run our URL Link from the
 urlpatterns = [
     path('',homepage, name='homepage'),                      #homepage
     path('loja/',loja, name='loja'),                            #store
-    path('loja/<str:nome_categoria>/',loja, name='loja'),       #store  but filtering according to product category            
+    path('loja/<str:filtro>/',loja, name='loja'),       #store  but filtering according to product category            
     path('produto/<int:id_produto>/', ver_produto, name='ver_produto'), #dynamically, for each product, "create" a details page, all pages are the same, but we have to get the product id to show    
     path('produto/<int:id_produto>/<int:id_cor>/', ver_produto, name="ver_produto"),                               
     path('minhaconta/', minha_conta, name='minhaconta'),                    #my account
