@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *                       #import all the tables 
 import uuid         #random number
-from .utils import filtrar_produtos
+from .utils import filtrar_produtos, preco_minimo_maximo
 # Create your views here.
 
 
@@ -14,7 +14,16 @@ def homepage(request):
 def loja(request, filtro=None):     #is None because we wait for the user to filter by the category 
     produtos = Produto.objects.filter(ativo=True)            #queryset
     produtos = filtrar_produtos(produtos, filtro)       #we create a separete file to organize
-    context = {'produtos': produtos}
+    #max and min price
+    # variable of size
+    tamanhos = ["P", "M", "G"]
+
+    #call the function of utils
+    minimo, maximo = preco_minimo_maximo(produtos)
+
+
+
+    context = {'produtos': produtos, "minimo":minimo, "maximo":maximo, "tamanhos":tamanhos}
     return render(request, 'loja.html', context)     #load the HTML file
 
 # see the details of the product
