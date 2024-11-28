@@ -10,13 +10,22 @@ def homepage(request):
     context = {"banners": banners}    
     return render(request, 'homepage.html', context)     #load the HTML file
 
-# store
+# store 
 def loja(request, filtro=None):     #is None because we wait for the user to filter by the category 
     produtos = Produto.objects.filter(ativo=True)            #queryset
     produtos = filtrar_produtos(produtos, filtro)       #we create a separete file to organize
+#if the user applied the filter to search for products
+    if request.method == "POST":                        #if the user send a forms
+        dados = request.POST.dict()     #info of the request
+        produtos = produtos.filter(preco__gte=dados.get("preco_minimo"), preco__lte=dados.get("preco_maximo"))
+        if "tamanho" in dados:
+            itens = ItemEstoque.objects.filter(produto__in=produtos, tamanho=dados.get("tamanho"))      
+            ids_produtos = itens.values_list("produto", flat=True).distinct()
+            produtos = produtos.filter(id__in=ids_produtos)
     #max and min price
     # variable of size
-    tamanhos = ["P", "M", "G"]
+    itens = ItemEstoque.objects.filter(quantidade__gt=0, produto__in=produtos)
+    tamanhos = itens.values_list("tamanho", flat=True).distinct()                          #bring the distincts sizes
 
     #call the function of utils
     minimo, maximo = preco_minimo_maximo(produtos)
@@ -163,7 +172,7 @@ def checkout(request):
 
 # add adress
 def adicionar_endereco(request):
-    if request.method == "POST":
+    if request.method == "POST":        
         #handle form submission
         if request.user.is_authenticated:
              cliente = request.user.cliente

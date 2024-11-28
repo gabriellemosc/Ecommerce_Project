@@ -5,10 +5,11 @@
 <h2>Loja</h2>
 
 
-<form action="POST">
+<form method="POST" action="">
+    {% csrf_token %}
     <p>Preço</p>
-        <input type="number" name="preco_minimo" value={{minimo}}>
-        <input type="number" name="preco_maximo" value={{maximo}}>
+        <input type="number" step="0.01"  name="preco_minimo" value="{{minimo}}" placeholder="Valor Minimo">
+        <input type="number" step="0.01" name="preco_maximo" value="{{maximo}}" placeholder="Valor Máximo">
     <p>Tamanho</p>
     {% for tamanho in tamanhos %}
         <input type="radio" name="tamanho" value="{{tamanho}}">

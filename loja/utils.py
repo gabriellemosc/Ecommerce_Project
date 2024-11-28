@@ -1,6 +1,6 @@
 from django.db.models import Max, Min #to filter min and max price
 
-def filtrar_produtos(produtos, filtro):
+def filtrar_produtos(produtos, filtro, preco_minimo=0, preco_maximo=1000000, tamanho=None):
     if filtro:
         if "-" in filtro:
             categoria,tipo = filtro.split('-')             #we're gonna separate in a list 
