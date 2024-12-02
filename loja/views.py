@@ -22,10 +22,17 @@ def loja(request, filtro=None):     #is None because we wait for the user to fil
             itens = ItemEstoque.objects.filter(produto__in=produtos, tamanho=dados.get("tamanho"))      
             ids_produtos = itens.values_list("produto", flat=True).distinct()
             produtos = produtos.filter(id__in=ids_produtos)
+        if "tipo" in dados:
+            produtos = produtos.filter(tipo__slug=dados.get("tipo"))
+        if "categoria" in dados:
+            produtos = produtos.filter(categoria__slug=dados.get("categoria"))
+
     #max and min price
     # variable of size
     itens = ItemEstoque.objects.filter(quantidade__gt=0, produto__in=produtos)
     tamanhos = itens.values_list("tamanho", flat=True).distinct()                          #bring the distincts sizes
+    ids_categorias = produtos.values_list("categoria", flat=True).distinct()
+    categorias = Categoria.objects.filter(id__in=ids_categorias)
 
     #call the function of utils
     minimo, maximo = preco_minimo_maximo(produtos)
