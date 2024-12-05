@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *                       #import all the tables 
 import uuid         #random number
-from .utils import filtrar_produtos, preco_minimo_maximo
+from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos
 # Create your views here.
 
 
@@ -36,6 +36,9 @@ def loja(request, filtro=None):     #is None because we wait for the user to fil
 
     #call the function of utils
     minimo, maximo = preco_minimo_maximo(produtos)
+
+    ordem = request.GET.get("ordem", "menor-preco")
+    produtos = ordenar_produtos(produtos,ordem)
 
 
 
