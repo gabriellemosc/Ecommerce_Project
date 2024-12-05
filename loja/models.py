@@ -41,6 +41,14 @@ class Produto(models.Model):
     def __str__(self):
         return f"Nome: {self.nome}, Categoria: {self.categoria}, Tipo: {self.tipo}, Preço: {self.preco}"
     
+#to organize according to best-selling items
+    def total_vendas(self):
+        itens = ItensPedido.objects.filter(pedido__finalizado=True, item_estoque__produto=self.id)      #all the product that were sale for this product 
+        total = sum([item.quantidade for item in itens])
+
+        return total
+    
+    
 #color of the product
 class Cor(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)
