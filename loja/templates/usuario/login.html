@@ -4,13 +4,19 @@
 
 <h2>Faça seu Login</h2>
 
-<form method="POST" action="">
+{% if erro %}
+
+<h4>Erro de Credenciais. Tente Novamente ou Crie uma Conta</h4>
+
+{% endif %}
+
+<form method="POST" action="{% url 'fazer_login' %}">
     {% csrf_token %}
     <input type="email" name="email" placeholder="Email">
     <input type="password" name="senha" placeholder="Senha">
     <button type="submit">Entrar</button>
 
-</form>
+</form> 
 
 <a href="{% url 'criar_conta' %}">Não tem uma conta? Criar Conta</a>
 

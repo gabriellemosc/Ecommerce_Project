@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *                       #import all the tables 
 import uuid         #random number
 from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos
+from django.contrib.auth import login, logout, authenticate
 # Create your views here.
 
 
@@ -203,9 +204,28 @@ def adicionar_endereco(request):
 # Page My account
 def minha_conta(request):              
     return render(request, 'usuario/minha_conta.html')     #load the HTML file
+
 #login page
-def login(request):              
-    return render(request, 'usuario/login.html')     #load the HTML file
+def fazer_login(request): 
+    erro = False  
+    if request.user.is_authenticated:   #if user is already authenticated we redirect him to the store
+        return redirect('loja')      
+    if request.method == "POST":
+        dados = request.POST.dict() 
+        if 'email' in dados and 'senha' in dados:           # if the post has email and password
+            email = dados.get('email')
+            senha = dados.get('senha')
+            usuario = authenticate(request,username=email, password=senha)        
+            if usuario:     #if there's a user
+                #make login
+                login(request, usuario)
+                return redirect('loja')
+            else:
+                erro = True                        #we will label the types of errors, so that the html shows different types of errors
+        else:
+            erro = True
+    context = {"erro":erro}
+    return render(request, 'usuario/login.html', context)     #load the HTML file
 
 
 #create a account
