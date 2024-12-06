@@ -2,18 +2,18 @@
 {% load static %}
 {% block body %}
 
-<h2>Faça seu Login</h2>
+<h2>Preencha Seus Dados Para Criar Uma Conta</h2>
 
 <form method="POST" action="">
     {% csrf_token %}
     <input type="email" name="email" placeholder="Email">
     <input type="password" name="senha" placeholder="Senha">
-    <button type="submit">Entrar</button>
+    <input type="password" name="confirmacao_senha" placeholder="Confirmação da Senha">
+    <button type="submit">Criar Conta</button>
 
 </form>
 
-<a href="{% url 'criar_conta' %}">Não tem uma conta? Criar Conta</a>
+<a href="{% url 'login' %}">Já tem uma Conta? Fazer Login </a>
 
-<a href="#">Esqueci minha senha</a>
 
 {% endblock %}

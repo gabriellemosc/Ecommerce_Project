@@ -206,3 +206,9 @@ def minha_conta(request):
 #login page
 def login(request):              
     return render(request, 'usuario/login.html')     #load the HTML file
+
+
+#create a account
+
+def criar_conta(request):
+    return render(request, "usuario/criarconta.html")
