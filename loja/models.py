@@ -13,6 +13,7 @@ class Cliente(models.Model):
 
     def __str__(self):
         return str(self.nome)
+    
 #category (male, female, childish)
 class Categoria(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)

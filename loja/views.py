@@ -3,6 +3,8 @@ from .models import *                       #import all the tables
 import uuid         #random number
 from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos
 from django.contrib.auth import login, logout, authenticate
+from django.core.validators import validate_email       
+from django.core.exceptions import ValidationError      #to show a erro in create a account 
 # Create your views here.
 
 
@@ -231,4 +233,52 @@ def fazer_login(request):
 #create a account
 
 def criar_conta(request):
-    return render(request, "usuario/criarconta.html")
+    erro = None
+    if request.user.is_authenticated:
+        return redirect('loja')
+    if request.method == "POST":
+        dados = request.POST.dict()
+        if "email" in dados and "senha" in dados and "confirmacao_senha" in dados:
+            #create account
+            email = dados.get("email")
+            senha = dados.get("senha")
+            confirmacao_senha = dados.get("confirmacao_senha")
+            try:
+                validate_email(email)
+            except ValidationError:
+                erro = "email_invalido"
+            if senha == confirmacao_senha:
+                #create account
+                usuario, criado = User.objects.get_or_create(username=email, email=email)        #verify if there's a user, if positive create one
+                if not criado:                                                     #means that the user already exists
+                    erro = "usuario_existente"
+                    print(erro)
+                else:                                                               #if the user was create
+                    usuario.set_password(senha)
+                    usuario.save()
+                    #make login
+                    usuario = authenticate(request, username=email, password=senha)
+                    login(request, usuario)
+
+                    #checks if there are id cookies in the browser
+                    if request.COOKIES.get("id_sessao"):
+                        id_sessao =  request.COOKIES.get('id_sessao')
+                        cliente,criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+                    else:
+                        cliente,criado = Cliente.objects.get_or_create(usuario=usuario, defaults={"email":email})
+                    cliente.usuario = usuario
+                    cliente.email = email
+                    cliente.save()
+                    return redirect('loja')
+            else:
+                erro = "senhas_diferentes"
+        else:
+            erro = "preenchimento"
+    context = {"erro":erro}
+    return render(request, "usuario/criarconta.html", context)
+
+
+#logout
+def fazer_logout(request):
+    logout(request)
+    return redirect("fazer_login")

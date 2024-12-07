@@ -13,6 +13,7 @@ urlpatterns = [
     path('removercarrinho/<int:id_produto>/',remover_carrinho, name='remover_carrinho'),
     path('adicionarendereco/', adicionar_endereco, name='adicionar_endereco'),
     path('minhaconta/', minha_conta, name='minhaconta'),                    #my account
-    path('fazer_login/',fazer_login, name='fazer_login'),                         #login
+    path('fazerlogin/',fazer_login, name='fazer_login'),                         #login
     path('criarconta/',criar_conta, name='criar_conta'),  
+   path('fazerlogout/',fazer_logout, name='fazer_logout'), 
 ]
