@@ -8,5 +8,30 @@
 
 <a href="{% url 'fazer_logout' %}">Sair da Conta</a>
 
+<h3>Meus Dados</h3>
+<form method="POST" action="{% url 'minha_conta' %}">
+    <input type="text" name="nome" placeholder="Nome Completo" 
+    {% if request.user.cliente.nome %}
+        value="{{request.user.cliente.nome}}">
+    {% endif %}
+    <input type="email" name="email" placeholder="E-mail" value="{{ request.user.email }}">
+    <input type="number" name="telefone" placeholder="Telefone" value="{{request.user.cliente.telefone}}">
+
+    <button type="submit">Salvar</button>
+
+
+</form>
+
+<hr>
+
+<h3>Alterar Senha</h3>
+
+<form method="POST" action="{% url 'minha_conta' %}">
+    <input type="password" name="senha_atual" id="" placeholder="Senha Atual">
+    <input type="password" name="nova_senha" id="" placeholder="Nova Senha">
+    <input type="password" name="nova_senha_confirmacao" id="" placeholder="Confirmação de nova senha">
+    <button type="submit">Editar senha</button>
+
+</form>
 
 {% endblock %}
