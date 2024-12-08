@@ -209,6 +209,15 @@ def adicionar_endereco(request):
 def minha_conta(request):              
     return render(request, 'usuario/minha_conta.html')     #load the HTML file
 
+#order 
+@login_required
+def meus_pedidos(request):
+    cliente = request.user.cliente
+    pedidos = Pedido.objects.filter(finalizado=True,cliente=cliente).order_by("-data_finalizacao")
+
+    context = {"pedidos": pedidos}
+    return render(request, "usuario/meus_pedidos.html", context)
+
 #login page
 def fazer_login(request): 
     erro = False  

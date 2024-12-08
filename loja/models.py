@@ -106,6 +106,11 @@ class Pedido(models.Model):
         itens_pedido = ItensPedido.objects.filter(pedido__id=self.id)
         preco = sum([item.preco_total for item in itens_pedido])
         return preco
+    #order items, to show in the html "my orders"
+    @property
+    def itens(self):
+        itens_pedido = ItensPedido.objects.filter(pedido__id=self.id)
+        return itens_pedido
 
 
 #items ordered
