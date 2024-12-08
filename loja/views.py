@@ -3,6 +3,7 @@ from .models import *                       #import all the tables
 import uuid         #random number
 from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email       
 from django.core.exceptions import ValidationError      #to show a erro in create a account 
 # Create your views here.
@@ -204,6 +205,7 @@ def adicionar_endereco(request):
         return render(request, 'adicionar_endereco.html', context)
 
 # Page My account
+@login_required
 def minha_conta(request):              
     return render(request, 'usuario/minha_conta.html')     #load the HTML file
 
@@ -252,14 +254,13 @@ def criar_conta(request):
                 usuario, criado = User.objects.get_or_create(username=email, email=email)        #verify if there's a user, if positive create one
                 if not criado:                                                     #means that the user already exists
                     erro = "usuario_existente"
-                    print(erro)
                 else:                                                               #if the user was create
                     usuario.set_password(senha)
                     usuario.save()
                     #make login
                     usuario = authenticate(request, username=email, password=senha)
                     login(request, usuario)
-
+                    
                     #checks if there are id cookies in the browser
                     if request.COOKIES.get("id_sessao"):
                         id_sessao =  request.COOKIES.get('id_sessao')
@@ -279,6 +280,7 @@ def criar_conta(request):
 
 
 #logout
+@login_required
 def fazer_logout(request):
     logout(request)
     return redirect("fazer_login")
