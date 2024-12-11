@@ -206,8 +206,52 @@ def adicionar_endereco(request):
 
 # Page My account
 @login_required
-def minha_conta(request):              
-    return render(request, 'usuario/minha_conta.html')     #load the HTML file
+def minha_conta(request):   
+    erro = None
+    alterado = False
+    if request.method == "POST":
+        dados = request.POST.dict()
+        if "senha_atual" in dados:
+            #changing the password
+            senha_atual = dados.get("senha_atual")
+            nova_senha = dados.get("nova_senha")
+            nova_senha_confirmacao = dados.get("nova_senha_confirmacao")
+            if nova_senha == nova_senha_confirmacao:
+                #verify if the actual password is correct
+                 usuario = authenticate(request,username=request.user.email, password=senha_atual) 
+                 if usuario:        #password is correct
+                        usuario.set_password(nova_senha)
+                        usuario.save()
+                        alterado = True
+                 else:
+                     erro = "senha_incorreta"
+            else:
+                erro = "senhas_diferentes"
+        elif "email" in dados:
+           email = dados.get("email") 
+           telefone = dados.get("telefone")
+           nome = dados.get("nome")
+           if email != request.user.email:          #trying to change the email
+               #we cant allow the user change the email for any that already exist in our DB
+               usuario = User.objects.filter(email=email)
+               if len(usuario) > 0:     #if there's a user with this email
+                   erro = " email_existente"
+           if not erro:
+                cliente = request.user.cliente
+                cliente.email = email
+                request.user.email = email
+                request.user.username = email
+                cliente.nome = nome
+                cliente.telefone = telefone
+                cliente.save()
+                request.user.save()
+                alterado = True
+
+        else:
+            erro = "formulario_invalido"
+            #changing info         
+    context = {"erro": erro, "alterado":alterado}
+    return render(request, 'usuario/minha_conta.html', context)     #load the HTML file
 
 #order 
 @login_required
