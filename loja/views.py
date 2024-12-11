@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email       
 from django.core.exceptions import ValidationError      #to show a erro in create a account 
+from datetime import datetime
 # Create your views here.
 
 
@@ -180,8 +181,52 @@ def checkout(request):
             return redirect('loja') 
     pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False) #If no order was created, we create an empty order for the customer, otherwise we would get an error
     enderecos = Endereco.objects.filter(cliente=cliente)
-    context = {"pedido": pedido, "enderecos": enderecos}        
+    context = {"pedido": pedido, "enderecos": enderecos, "erro":None}        
     return render(request, 'checkout.html', context)     #load the HTML file
+
+#finalize order after checkout
+def finalizar_pedido(request, id_pedido):
+    erro = None
+    if request.method == "POST":
+         dados = request.POST.dict()
+         print(dados)
+         total = dados.get("total")
+         pedido = Pedido.objects.get(id=id_pedido)  #we take the order we are analyzing
+         if total != pedido.preco_total:            #If the total checkout price is different from the price we have in our database, an error will be generated.
+             erro = "preco"
+         if not "endereco" in dados:                #if there's not a address
+             erro =  "endereco"
+         else:
+             endereco = dados.get("endereco")     
+             pedido.endereco = endereco  
+         if not request.user.is_authenticated:      
+            email = dados.get("email")
+            try:
+                validate_email(email)           #If the user has not authenticated, we try to authenticate their email
+            except ValidationError:
+                 erro = "email"
+                 if not erro:
+                     clientes = Cliente.objects.filter(email=email)
+                     if clientes:
+                         pedido.cliente = clientes[0]
+                     else:
+                         pedido.cliente.email = email
+                         pedido.cliente.save()
+         
+         codigo_transacao = f"{pedido.id}--{datetime.now().timestamp()}"
+         pedido.codigo_transacao = codigo_transacao
+         pedido.save()
+         if erro:
+             enderecos = Endereco.objects.filter(cliente=pedido.cliente)
+             context = {"erro": erro, "pedido": pedido, "enderecos": enderecos}
+             return render(request, "checkout.html", context)
+         else:
+             #TODO pagamento do usuario
+             return redirect("checkout", erro)
+        
+    else:
+        return redirect("loja")
+
 
 
 # add adress
