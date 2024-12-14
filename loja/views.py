@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email       
 from django.core.exceptions import ValidationError      #to show a erro in create a account 
 from datetime import datetime
+from .mercadopago.venv_mercadopago.api_mercadopago import criar_pagamento
 # Create your views here.
 
 
@@ -191,13 +192,15 @@ def finalizar_pedido(request, id_pedido):
          dados = request.POST.dict()
          print(dados)
          total = dados.get("total")
+         total = float(total.replace(",","."))
          pedido = Pedido.objects.get(id=id_pedido)  #we take the order we are analyzing
-         if total != pedido.preco_total:            #If the total checkout price is different from the price we have in our database, an error will be generated.
+         if total != float(pedido.preco_total):            #If the total checkout price is different from the price we have in our database, an error will be generated.
              erro = "preco"
          if not "endereco" in dados:                #if there's not a address
              erro =  "endereco"
          else:
-             endereco = dados.get("endereco")     
+             id_endereco = dados.get("endereco")  
+             endereco = Endereco.objects.get(id=id_endereco)   
              pedido.endereco = endereco  
          if not request.user.is_authenticated:      
             email = dados.get("email")
@@ -221,8 +224,13 @@ def finalizar_pedido(request, id_pedido):
              context = {"erro": erro, "pedido": pedido, "enderecos": enderecos}
              return render(request, "checkout.html", context)
          else:
-             #TODO pagamento do usuario
-             return redirect("checkout", erro)
+             itens_pedido = ItensPedido.objects.filter(pedido=pedido)
+             link = "https://webhook.site/1292c788-2964-43ae-b054-666bfcee387b"
+             link_pagamento, id_pagamento = criar_pagamento(itens_pedido,link)
+             criar_pagamento(itens_pedido,link)
+             pagamento = Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
+             pagamento.save()
+             return redirect("loja")
         
     else:
         return redirect("loja")
