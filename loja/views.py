@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import *                       #import all the tables 
+from .models import *                       #import all the tables
+from django.urls import reverse 
 import uuid         #random number
 from .utils import filtrar_produtos, preco_minimo_maximo, ordenar_produtos
 from django.contrib.auth import login, logout, authenticate
@@ -93,6 +94,7 @@ def ver_produto(request, id_produto, id_cor=None):
 
 # add product to buy
 def adicionar_carrinho(request, id_produto):
+    cliente = None
     if request.method == "POST" and id_produto:
         dados = request.POST.dict()                 #get info of the request
         tamanho = dados.get('tamanho')
@@ -103,7 +105,10 @@ def adicionar_carrinho(request, id_produto):
         resposta = redirect('carrinho')
         #get the client
         if request.user.is_authenticated:
-            cliente = request.user.cliente
+            try:
+                cliente = request.user.cliente
+            except Cliente.DoesNotExist:
+                cliente = None
         else:
             #we will store the customer session data
             if request.COOKIES.get('id_sessao'):                #we check if the user already has a session id
@@ -123,6 +128,7 @@ def adicionar_carrinho(request, id_produto):
         return redirect('loja')
     
 def remover_carrinho(request, id_produto):
+     cliente = None
      if request.method == "POST" and id_produto:
         dados = request.POST.dict()                 #get info of the request
         tamanho = dados.get('tamanho')
@@ -131,7 +137,10 @@ def remover_carrinho(request, id_produto):
             return redirect('loja')
         #get the client
         if request.user.is_authenticated:
-            cliente = request.user.cliente
+            try:
+                cliente = request.user.cliente
+            except Cliente.DoesNotExist:
+                cliente = None
         else:
             if request.COOKIES.get('id_sessao'):
                 id_sessao = request.COOKIES.get('id_sessao')
@@ -154,9 +163,13 @@ def remover_carrinho(request, id_produto):
 
 
 #verify and see the 'carrinho'
-def carrinho(request):    
+def carrinho(request):  
+    cliente = None  
     if request.user.is_authenticated:
-        cliente = request.user.cliente
+        try:
+            cliente = request.user.cliente
+        except Cliente.DoesNotExist:
+            cliente = None
     else:
         if request.COOKIES.get("id_sessao"):
             id_sessao =  request.COOKIES.get('id_sessao')
@@ -171,9 +184,13 @@ def carrinho(request):
     return render(request, 'carrinho.html', context)     #load the HTML file
 
 #exit the site
-def checkout(request):              
+def checkout(request):   
+    cliente = None           
     if request.user.is_authenticated:
-        cliente = request.user.cliente
+        try:
+            cliente = request.user.cliente
+        except Cliente.DoesNotExist:
+            cliente = None
     else:
         if request.COOKIES.get("id_sessao"):
             id_sessao =  request.COOKIES.get('id_sessao')
@@ -225,24 +242,53 @@ def finalizar_pedido(request, id_pedido):
              return render(request, "checkout.html", context)
          else:
              itens_pedido = ItensPedido.objects.filter(pedido=pedido)
-             link = "https://webhook.site/1292c788-2964-43ae-b054-666bfcee387b"
+             link = request.build_absolute_uri(reverse('finalizar_pagamento'))      #get the complete url of our site + the relative that we're using with reverse
              link_pagamento, id_pagamento = criar_pagamento(itens_pedido,link)
              criar_pagamento(itens_pedido,link)
              pagamento = Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
              pagamento.save()
-             return redirect("loja")
+             return redirect(link_pagamento)
         
     else:
         return redirect("loja")
 
+def finalizar_pagamento(request):
+    dados = request.GET.dict()
+    status = dados.get("status")
+    id_pagamento = dados.get("preference_id")
+    if status == "approved":
+        pagamento = Pagamento.objects.get(id_pagamento=id_pagamento)
+        pagamento.aprovado = True
+        pedido = pagamento.pedido
+        pedido.finalizado = True
+        pedido.data_finalizacao = datetime.now()
+        pedido.save()
+        pagamento.save()
+        if request.user.is_authenticated:
+            return redirect('meus_pedidos')
+        else:
+            return redirect('pedido_aprovado', pedido.id)
+    else:
+        return redirect("checkout")
+
+
+
+def pedido_aprovado(request, id_pedido):
+    pedido = Pedido.objects.get(id=id_pedido)
+    context = {"pedido": pedido}
+    return render(request,"pedidoaprovado.html", context)
 
 
 # add adress
 def adicionar_endereco(request):
+    cliente = None
     if request.method == "POST":        
         #handle form submission
         if request.user.is_authenticated:
-             cliente = request.user.cliente
+             try:
+                cliente = request.user.cliente
+             except Cliente.DoesNotExist:
+                 cliente = None
         else:
             if request.COOKIES.get("id_sessao"):
                 id_sessao =  request.COOKIES.get('id_sessao')
@@ -290,15 +336,22 @@ def minha_conta(request):
                if len(usuario) > 0:     #if there's a user with this email
                    erro = " email_existente"
            if not erro:
-                cliente = request.user.cliente
-                cliente.email = email
-                request.user.email = email
-                request.user.username = email
-                cliente.nome = nome
-                cliente.telefone = telefone
-                cliente.save()
-                request.user.save()
-                alterado = True
+                try:
+                    cliente = request.user.cliente
+                except Cliente.DoesNotExist:
+                    cliente = None
+                    erro = "cliente_nao_encontrado"
+                if cliente:
+                    cliente.email = email
+                    request.user.email = email
+                    request.user.username = email
+                    cliente.nome = nome
+                    cliente.telefone = telefone
+                    cliente.save()
+                    request.user.save()
+                    alterado = True
+                else:
+                    erro = "cliente_nao_encontrado"
 
         else:
             erro = "formulario_invalido"

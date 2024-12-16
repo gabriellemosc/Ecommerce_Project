@@ -15,6 +15,8 @@ urlpatterns = [
     path('adicionarendereco/', adicionar_endereco, name='adicionar_endereco'),
 
     path('finalizarpedido/<int:id_pedido>/', finalizar_pedido, name='finalizar_pedido'),
+    path('finalizar_pagamento/', finalizar_pagamento, name='finalizar_pagamento'),
+    path('pedidoaprovado/<int:id_produto>/', pedido_aprovado, name='pedido_aprovado'),
 
     path('minhaconta/', minha_conta, name='minha_conta'),                    #my account
     path('fazerlogin/',fazer_login, name='fazer_login'),                         #login

@@ -4,7 +4,10 @@ from .models import Pedido, ItensPedido,Cliente,Categoria,Tipo
 def carrinho(request):
     quantidades_produtos_carrinho = 0
     if request.user.is_authenticated:
-        cliente = request.user.cliente      #get the client
+        try:
+            cliente = request.user.cliente      #get the client
+        except Cliente.DoesNotExist:
+                cliente = None
     else:
         if request.COOKIES.get('id_sessao'):        #get the session id 
             id_sessao = request.COOKIES.get('id_sessao')
