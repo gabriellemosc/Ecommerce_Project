@@ -31,7 +31,7 @@ def ordenar_produtos(produtos, ordem):
         lista_produtos = []
         for produto in produtos:
             lista_produtos.append((produto.total_vendas(), produto))
-        lista_produtos = sorted(lista_produtos, reverse=True)
+        lista_produtos = sorted(lista_produtos, reverse=True, key=lambda tupla: tupla[0])
         produtos = [item[1] for item in lista_produtos]
     
     return produtos
