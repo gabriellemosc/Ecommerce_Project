@@ -18,6 +18,9 @@ urlpatterns = [
     path('finalizar_pagamento/', finalizar_pagamento, name='finalizar_pagamento'),
     path('pedidoaprovado/<int:id_produto>/', pedido_aprovado, name='pedido_aprovado'),
 
+    path('gerenciarloja/', gerenciar_loja, name='gerenciar_loja'),
+    path('exportarrelatiorio/<str:relatorio>/', exportar_relatorio, name='exportar_relatorio'),
+
     path('minhaconta/', minha_conta, name='minha_conta'),                    #my account
     path('fazerlogin/',fazer_login, name='fazer_login'),                         #login
     path('criarconta/',criar_conta, name='criar_conta'),  

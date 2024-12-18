@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'loja.novos_context.carrinho',   
                 'loja.novos_context.categorias_tipos',                                                                # we add the context of the 'carrinho' for all the views has acess to this 
+                'loja.novos_context.faz_parte_equipe'
             ],
         },
     },

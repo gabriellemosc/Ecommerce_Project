@@ -1,5 +1,7 @@
 from django.db.models import Max, Min #to filter min and max price
 from django.core.mail import send_mail                                                  #send email
+import csv
+from django.http import HttpResponse
 
 
 def filtrar_produtos(produtos, filtro, preco_minimo=0, preco_maximo=1000000, tamanho=None):
@@ -47,3 +49,20 @@ def enviar_email_compra(pedido):
         Valor Total: {pedido.preco_total}"""
         remetente = "gabriel.lemos1910@gmail.com"
         send_mail(assunto,corpo,remetente,[email])
+
+def exportar_csv(informacoes):
+    colunas = informacoes.model._meta.fields
+    nomes_colunas = [coluna.name for coluna in colunas]
+
+    resposta = HttpResponse(content_type='text/csv')
+    resposta['Content-Disposition'] = "attchment; filename= export.csv "
+    criado_csv = csv.writer(resposta, delimiter=';')
+    #write colows
+    criado_csv.writerow(nomes_colunas)
+    #write rows
+    for linha in informacoes.values_list():
+        criado_csv.writerow(linha)
+
+
+
+    return resposta

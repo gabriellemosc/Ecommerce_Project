@@ -19,7 +19,12 @@
     {% if request.user.is_authenticated %}
          <a href="{% url 'minha_conta' %}">Minha Conta</a>
     {% else %}
-    <a href="{% url 'fazer_login' %}">Login</a>
+         <a href="{% url 'fazer_login' %}">Login</a>
+    {% endif %}
+
+    {% if equipe %}
+    <a href="{% url 'gerenciar_loja' %}">Gerenciar Loja</a>
+
     {% endif %}
    
     <a href="{% url 'carrinho' %}">Carrinho</a>
