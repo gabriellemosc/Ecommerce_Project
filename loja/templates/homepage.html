@@ -5,13 +5,27 @@
 
 <h2>Homepage</h2>
 
-{% for banner in banners %}
 
-<!-- concatenate the website url plus the category -->
-<a href="{% url 'loja' %}{{banner.link_destino }}">
-    <!-- Take the link of the image -->
-    <img src={{banner.imagem.url}} alt="">
-</a>
-{% endfor %}
+
+
+<main class="principal">
+   
+    <section class="banner-grid">
+    {% for banner in banners %}
+
+      <a
+        href="{% url 'loja' %}{{banner.link_destino }}"
+        class="banner-grid__imagem"
+      >
+        <img
+          src="{{ banner.imagem.url }}"
+          alt="{{banner.link_destino }}"
+        />
+      </a>
+    {% endfor %}
+    </section>
+
+
+  </main>
 
 {% endblock %}
