@@ -78,8 +78,8 @@ def ver_produto(request, id_produto, id_cor=None):
         # Extract unique sizes for remaining items
         tamanhos = list(itens_estoque.values_list('tamanho', flat=True))
     
-   
-
+    #recomendation of product similar to show, excluding the product itself
+    similares = Produto.objects.filter(categoria__id=produto.categoria.id, tipo__id=produto.tipo.id).exclude(id=produto.id)[:4]
     # Cria o contexto para o template
     context = {
         "produto": produto,
@@ -87,7 +87,8 @@ def ver_produto(request, id_produto, id_cor=None):
         "tem_estoque": tem_estoque,
         "cores": cores,
         "tamanhos": tamanhos,
-        "cor_selecionada": cor_selecionada
+        "cor_selecionada": cor_selecionada,
+        "similares":similares
     }
 
     return render(request, 'ver_produto.html', context)
