@@ -16,4 +16,16 @@
 ![Homepage](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Captura%20de%20tela%20de%202024-12-25%2016-02-28.png)
 
 
+## ✔️ Techniques and technologies used
+
+- ``Python 3.12.3``
+- ``Django``
+- ``HTML``
+- ``SQLite``
+- ``OOP``
+- ``Payment API Integration``
+- - ``Virtual Enviroment``
+- - ``JavaScript``
+
+
 ![appinterface](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Grava%C3%A7%C3%A3o%20de%20tela%20de%202024-12-25%2016-21-23.gif)
