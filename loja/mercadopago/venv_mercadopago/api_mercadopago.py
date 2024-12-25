@@ -1,8 +1,10 @@
 import mercadopago
+# to hide the public key and token
+from decouple import config
 
-public_key = "APP_USR-85113884-99be-4368-862b-d43b58c2ff47"
+public_key = config("PUBLIC_KEY")
 
-token = "APP_USR-8141489178571036-121319-7bb537209b919a3669331fb192835633-2157457722"
+token = config("TOKEN")
 
 # Adicione as credenciais
 
@@ -26,13 +28,16 @@ def criar_pagamento(itens_pedido, link):
         "items": itens,
         "auto_return": "all",
         "back_urls": {
-            "sucess": link,
+            "success": link,
             "pending": link,
             "failure": link,
         }
     }
 
     resposta = sdk.preference().create(preference_data)
+
+    print("Resposta", resposta)
+    
     link_pagamento = resposta["response"]["init_point"]
 
     id_pagamento = resposta["response"]["id"]
