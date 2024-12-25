@@ -31,6 +31,15 @@
 ![appinterface](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Grava%C3%A7%C3%A3o%20de%20tela%20de%202024-12-25%2016-21-23.gif)
 
 
+## 📸 Project Screenshots
+
+Here are some screenshots of the **Fake Netflix** project, showing the main features and user interface.
+
+| Shompping Cart  | Details of Product | LoginPage |
+| --- | --- | --- |
+| ![Sales Car](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Captura%20de%20tela%20de%202024-12-23%2019-26-23.png) | ![Product Details](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Captura%20de%20tela%20de%202024-12-22%2021-19-31.png) | ![Store](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Captura%20de%20tela%20de%202024-12-25%2014-16-46.png) |
+
+
 
 ## License
 
