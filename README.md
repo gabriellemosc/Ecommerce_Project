@@ -29,3 +29,17 @@
 
 
 ![appinterface](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Grava%C3%A7%C3%A3o%20de%20tela%20de%202024-12-25%2016-21-23.gif)
+
+
+
+## License
+
+This project is licensed under the MIT License. See the file [LICENSE](./LICENSE) for more details.
+
+
+- ## Author
+
+[<img loading="lazy" src="https://github.com/gabriellemosc.png?size=115" width=115><br><sub>Gabriel Lemos</sub>](https://github.com/gabriellemosc) 
+
+
+Description: Backend Developer
