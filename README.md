@@ -31,6 +31,57 @@
 ![appinterface](https://github.com/gabriellemosc/Ecommerce_Project/blob/main/Project%20Photos/Grava%C3%A7%C3%A3o%20de%20tela%20de%202024-12-25%2016-21-23.gif)
 
 
+## 🛠️ Getting Started
+1. **Clone the repository**  
+  - Clone the repository to your local machine:
+
+   ```bash
+   git clone https://github.com/gabriellemosc/Ecommerce_Project
+   ```
+2. **Create and Activate the Virtual Environment**  
+- To keep dependencies organized, create a Python virtual environment and activate it:
+    ```bash
+  python3 -m venv venv
+  source venv/bin/activate  # No Windows, use 'venv\Scripts\activate'
+  ```
+3. **Configuração do Banco de Dados**  
+- a) Modify the Database Settings in settings.py
+Open the settings.py file and change the database settings for your own environment. By default, Django uses SQLite, but you can switch to another database, such as PostgreSQL or MySQL, if you prefer.:
+  Exemplo para SQLite (sem alterações):
+  ```python
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+  }
+  ```
+- b) Create the Database and Migrations
+    After configuring the database, create the necessary tables with the following commands:
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
+    ```
+4. **Create a Django Superuser**
+- To access the Django admin panel, you will need a superuser:
+    ```bash
+      python manage.py createsuperuser
+      ```
+Follow the instructions to set the username, email and password.
+
+5. **Start the Local Server**
+- Now run the development server to see the project running:
+    ```bash
+      python manage.py runserver
+    ```
+    
+6. **Add Products,Type, Category to your store**
+- Now that your application is running, acess localhost/admin, to add your products:
+    ```bash
+      URL: localhost/admin 
+    ```
+
+
 ## 📸 Project Screenshots
 
 Here are some screenshots of the **Fake Netflix** project, showing the main features and user interface.
