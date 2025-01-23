@@ -44,7 +44,7 @@
   python3 -m venv venv
   source venv/bin/activate  # No Windows, use 'venv\Scripts\activate'
   ```
-3. **Configuração do Banco de Dados**  
+3. **Database Config **  
 - a) Modify the Database Settings in settings.py
 Open the settings.py file and change the database settings for your own environment. By default, Django uses SQLite, but you can switch to another database, such as PostgreSQL or MySQL, if you prefer.:
   Exemplo para SQLite (sem alterações):
