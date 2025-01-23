@@ -99,7 +99,7 @@ This project is licensed under the MIT License. See the file [LICENSE](./LICENSE
 
 - ## Author
 
-[<img loading="lazy" src="https://github.com/gabriellemosc.png?size=115" width=115><br><sub>Gabriel Lemos</sub>](https://github.com/gabriellemosc) 
+<h3> <a href="https://github.com/gabriellemosc">Gabriel L. </a></h3>
 
 
 Description: Backend Developer
