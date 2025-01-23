@@ -2,11 +2,11 @@
 
 <h1 align="center"> Project "Reserva" Ecommerce </h1>
 
-<span>Nossa referência para fazer esse site foi da loja <a href="https://www.usereserva.com/?gad_source=1&gclid=Cj0KCQiA9667BhDoARIsANnamQYLynA7ewm7mCpcfk-0wf5uwTs3bRrLAI-t-mVEC5zaR2KSKUKTJO8aAlM7EALw_wcB">Reserva</a> 🛒 </span>
+<span>My reference for creating the website was <a href="https://www.usereserva.com/?gad_source=1&gclid=Cj0KCQiA9667BhDoARIsANnamQYLynA7ewm7mCpcfk-0wf5uwTs3bRrLAI-t-mVEC5zaR2KSKUKTJO8aAlM7EALw_wcB">Reserva</a> 🛒 </span>
 
 ## 🚀 About
 
-<p> This is a reference project used on a Brazilian website called <b>'Reserva'</b>. In this project, in addition to the mirrored look, we created an account management system, shopping cart, category and types of clothing, search filters by category, price, quantity sold, export of sales reports, payment system with integration with API paid market</p>
+<p> This is a reference project used on a Brazilian website called <b>'Reserva'</b>. In this project, in addition to the mirrored look, I created an account management system, shopping cart, category and types of clothing, search filters by category, price, quantity sold, export of sales reports, payment system with integration with API paid market</p>
 
 - This project was created using <b> Django a Python FrameWork</b>
 
@@ -84,7 +84,7 @@ Follow the instructions to set the username, email and password.
 
 ## 📸 Project Screenshots
 
-Here are some screenshots of the **Fake Netflix** project, showing the main features and user interface.
+Here are some screenshots of the  project, showing the main features and user interface.
 
 | Shompping Cart  | Details of Product | LoginPage |
 | --- | --- | --- |
